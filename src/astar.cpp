@@ -1,10 +1,17 @@
-#include "astar.h"
-
 #include <memory>
 #include <stdexcept>
 
-auto AStar::FindPath(Node* from, Node* to) const noexcept
-    -> std::optional<std::vector<Node*>> {
+#include "pathfinder.h"
+
+namespace Pathfinding {
+auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
+  struct NodeData {
+    float h_score{};
+    float g_score{};
+
+    std::optional<Node*> came_from{};
+  };
+
   std::map<Node*, NodeData> node_data{};
 
   // comparison function for std::push_heap and std::pop_heap
@@ -37,7 +44,7 @@ auto AStar::FindPath(Node* from, Node* to) const noexcept
         last_in_path = node_data[last_in_path].came_from.value();
       }
 
-      return path;
+      return {path};
     }
 
     for (const auto& connection : lowest_score_node->GetConnections()) {
@@ -63,3 +70,4 @@ auto AStar::FindPath(Node* from, Node* to) const noexcept
 
   return {};
 }
+}  // namespace Pathfinding

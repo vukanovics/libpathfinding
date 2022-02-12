@@ -4,8 +4,10 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <utility>
 #include <vector>
 
+namespace Pathfinding {
 class Pathfinder {
  public:
   virtual ~Pathfinder() = default;
@@ -18,6 +20,7 @@ class Pathfinder {
   Pathfinder(Pathfinder&&) = default;
   Pathfinder& operator=(Pathfinder&&) = default;
 
+  enum class Backend { AStar };
   //!
   //! Point with connections to other points.
   //!
@@ -84,6 +87,11 @@ class Pathfinder {
     std::vector<Node*> connections;
   };
 
+  struct Result {
+    Result() = default;
+    Result(std::optional<std::vector<Node*>> path) : path(std::move(path)) {}
+    std::optional<std::vector<Pathfinder::Node*>> path;
+  };
   //!
   //! Add a node to the nodes vector.
   //!
@@ -99,11 +107,12 @@ class Pathfinder {
   //!
   //! @param from Pointer to the starting Node.
   //! @param to Pointer to the goal Node.
+  //! @param backend Which backend to use from the Backend enum.
   //!
-  //! @return Optional value containing the path if found.
+  //! @return Result of the pathfinding attempt.
   //!
-  [[nodiscard]] virtual auto FindPath(Node* from, Node* to) const noexcept
-      -> std::optional<std::vector<Node*>> = 0;
+  [[nodiscard]] auto FindPath(Node* from, Node* to,
+                              Backend backend) const noexcept -> Result;
 
   //!
   //! Returns a const ref to the vector of nodes.
@@ -125,5 +134,8 @@ class Pathfinder {
   }
 
  private:
+  [[nodiscard]] auto FindPath_AStar(Node* from, Node* to) const noexcept
+      -> Result;
   std::vector<std::unique_ptr<Node>> nodes{};
 };
+}  // namespace Pathfinding
