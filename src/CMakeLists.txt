@@ -3,4 +3,5 @@ set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-header-filter=./src/*.h;--extra-arg-before
 add_library(
   libpathfinding
   astar.cpp
+  pathfinder.cpp
 )

@@ -8,6 +8,7 @@ auto Pathfinder::FindPath(Node* from, Node* to, Backend backend) const noexcept
       return FindPath_AStar(from, to);
       break;
   }
+  return {};
 }
 
 };  // namespace Pathfinding
