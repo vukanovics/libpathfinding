@@ -44,6 +44,8 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
         last_in_path = node_data[last_in_path].came_from.value();
       }
 
+      path.push_back(from);
+
       return {path};
     }
 
