@@ -33,7 +33,7 @@ class Pathfinder {
    public:
     Node() = default;
 
-    ~Node() {
+    virtual ~Node() {
       for (auto connection : connections) {
         connection->RemoveConnection(this);
       }
