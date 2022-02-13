@@ -13,6 +13,7 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
   };
 
   std::map<Node*, NodeData> node_data{};
+  auto nodes_opened = int{};
 
   // comparison function for std::push_heap and std::pop_heap
   const auto node_score_cmp = [&node_data](const auto& first,
@@ -30,6 +31,8 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
   node_data.insert({from, NodeData{}});
   open_nodes.push_back(from);
 
+  nodes_opened++;
+
   while (open_nodes.size() > 0) {
     std::pop_heap(open_nodes.begin(), open_nodes.end(), node_score_cmp);
     auto lowest_score_node = std::move(open_nodes.back());
@@ -46,7 +49,8 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
 
       path.push_back(from);
 
-      return {path};
+      auto cost_to_goal = node_data[to].g_score;
+      return {{path, cost_to_goal}, nodes_opened};
     }
 
     for (const auto& connection : lowest_score_node->GetConnections()) {
@@ -66,6 +70,7 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
         open_nodes.push_back(connection);
         std::push_heap(std::begin(open_nodes), std::end(open_nodes),
                        node_score_cmp);
+        nodes_opened++;
       }
     }
   }

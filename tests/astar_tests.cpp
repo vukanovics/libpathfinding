@@ -81,6 +81,9 @@ TEST(AStar, SimplePath) {
     auto node2 = std::make_unique<TestNode>(std::make_pair(5.0f, 0.0f));
     auto node3 = std::make_unique<TestNode>(std::make_pair(10.0f, 0.0f));
 
+    auto expected_length =
+        node1->GetExactCostTo(node2.get()) + node2->GetExactCostTo(node3.get());
+
     auto pathfinder = Pathfinder{};
     auto node1_ptr = pathfinder.AddNode(std::move(node1));
     auto node2_ptr = pathfinder.AddNode(std::move(node2));
@@ -96,11 +99,18 @@ TEST(AStar, SimplePath) {
         pathfinder.FindPath(node1_ptr, node3_ptr, Pathfinder::Backend::AStar);
 
     ASSERT_TRUE(result.path.has_value());
-    ASSERT_EQ(result.path.value().size(), 3);
 
-    ASSERT_EQ(result.path.value()[0], node3_ptr);
-    ASSERT_EQ(result.path.value()[1], node2_ptr);
-    ASSERT_EQ(result.path.value()[2], node1_ptr);
+    auto path = result.path.value();
+    auto nodes = path.nodes;
+
+    ASSERT_EQ(nodes.size(), 3);
+    ASSERT_EQ(result.nodes_opened, 3);
+
+    ASSERT_FLOAT_EQ(path.length, expected_length);
+
+    ASSERT_EQ(nodes[0], node3_ptr);
+    ASSERT_EQ(nodes[1], node2_ptr);
+    ASSERT_EQ(nodes[2], node1_ptr);
   }
 }
 
@@ -111,6 +121,10 @@ TEST(AStar, BranchingPath) {
     auto node3 = std::make_unique<TestNode>(std::make_pair(2.0f, 1.0f));
     auto node4 = std::make_unique<TestNode>(std::make_pair(3.0f, 0.0f));
     auto node5 = std::make_unique<TestNode>(std::make_pair(2.0f, -4.0f));
+
+    auto expected_length = node1->GetExactCostTo(node2.get()) +
+                           node2->GetExactCostTo(node3.get()) +
+                           node3->GetExactCostTo(node4.get());
 
     auto pathfinder = Pathfinder{};
     auto node1_ptr = pathfinder.AddNode(std::move(node1));
@@ -138,11 +152,18 @@ TEST(AStar, BranchingPath) {
         pathfinder.FindPath(node1_ptr, node4_ptr, Pathfinder::Backend::AStar);
 
     ASSERT_TRUE(result.path.has_value());
-    ASSERT_EQ(result.path.value().size(), 4);
 
-    ASSERT_EQ(result.path.value()[0], node4_ptr);
-    ASSERT_EQ(result.path.value()[1], node3_ptr);
-    ASSERT_EQ(result.path.value()[2], node2_ptr);
-    ASSERT_EQ(result.path.value()[3], node1_ptr);
+    auto path = result.path.value();
+    auto nodes = path.nodes;
+
+    ASSERT_EQ(nodes.size(), 4);
+    ASSERT_EQ(result.nodes_opened, 5);
+
+    ASSERT_FLOAT_EQ(path.length, expected_length);
+
+    ASSERT_EQ(nodes[0], node4_ptr);
+    ASSERT_EQ(nodes[1], node3_ptr);
+    ASSERT_EQ(nodes[2], node2_ptr);
+    ASSERT_EQ(nodes[3], node1_ptr);
   }
 }

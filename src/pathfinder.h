@@ -87,11 +87,21 @@ class Pathfinder {
     std::vector<Node*> connections;
   };
 
+  struct Path {
+    Path(std::vector<Node*> nodes, float length)
+        : nodes(std::move(nodes)), length(length) {}
+    std::vector<Node*> nodes = {};
+    float length = 0.0f;
+  };
+
   struct Result {
     Result() = default;
-    Result(std::optional<std::vector<Node*>> path) : path(std::move(path)) {}
-    std::optional<std::vector<Pathfinder::Node*>> path;
+    Result(Path path, int nodes_opened)
+        : path(std::move(path)), nodes_opened(nodes_opened) {}
+    std::optional<Path> path{};
+    int nodes_opened = 0;
   };
+
   //!
   //! Add a node to the nodes vector.
   //!
