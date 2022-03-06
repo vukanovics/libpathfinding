@@ -33,11 +33,7 @@ class Pathfinder {
    public:
     Node() = default;
 
-    virtual ~Node() {
-      for (auto connection : connections) {
-        connection->RemoveConnection(this);
-      }
-    }
+    virtual ~Node() = default;
 
     Node(const Node&) = delete;
     Node(Node&&) = delete;
@@ -137,6 +133,10 @@ class Pathfinder {
   //! @param node Node to remove.
   //!
   inline void RemoveNode(Node* node) noexcept {
+    // remove all connections to this node
+    std::for_each(std::begin(nodes), std::end(nodes),
+                  [&node](auto& n) { n->RemoveConnection(node); });
+    // and then remove it from storage
     nodes.erase(
         std::remove_if(std::begin(nodes), std::end(nodes),
                        [&node](auto const& e) { return e.get() == node; }),
