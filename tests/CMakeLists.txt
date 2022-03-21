@@ -9,6 +9,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 add_executable(
 	cpp-pathfinding-tests
+	EXCLUDE_FROM_ALL
 	astar_tests.cpp
 )
 
