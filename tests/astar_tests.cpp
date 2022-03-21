@@ -108,9 +108,9 @@ TEST(AStar, SimplePath) {
 
     ASSERT_FLOAT_EQ(path.length, expected_length);
 
-    ASSERT_EQ(nodes[0], node3_ptr);
+    ASSERT_EQ(nodes[0], node1_ptr);
     ASSERT_EQ(nodes[1], node2_ptr);
-    ASSERT_EQ(nodes[2], node1_ptr);
+    ASSERT_EQ(nodes[2], node3_ptr);
   }
 }
 
@@ -161,9 +161,9 @@ TEST(AStar, BranchingPath) {
 
     ASSERT_FLOAT_EQ(path.length, expected_length);
 
-    ASSERT_EQ(nodes[0], node4_ptr);
-    ASSERT_EQ(nodes[1], node3_ptr);
-    ASSERT_EQ(nodes[2], node2_ptr);
-    ASSERT_EQ(nodes[3], node1_ptr);
+    ASSERT_EQ(nodes[0], node1_ptr);
+    ASSERT_EQ(nodes[1], node2_ptr);
+    ASSERT_EQ(nodes[2], node3_ptr);
+    ASSERT_EQ(nodes[3], node4_ptr);
   }
 }

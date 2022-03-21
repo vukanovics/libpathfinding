@@ -49,6 +49,8 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
 
       path.push_back(from);
 
+      std::reverse(std::begin(path), std::end(path));
+
       auto cost_to_goal = node_data[to].g_score;
       return {{path, cost_to_goal}, nodes_opened};
     }
