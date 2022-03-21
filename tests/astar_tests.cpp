@@ -75,6 +75,29 @@ TEST(AStar, TestNode) {
     ASSERT_FLOAT_EQ(cost, 3.53553339f);
   }
 }
+
+TEST(AStar, OneNode) {
+  auto node1 = std::make_unique<TestNode>(std::make_pair(0.0f, 0.0f));
+
+  auto pathfinder = Pathfinder{};
+  auto node1_ptr = pathfinder.AddNode(std::move(node1));
+
+  auto result =
+      pathfinder.FindPath(node1_ptr, node1_ptr, Pathfinder::Backend::AStar);
+
+  ASSERT_TRUE(result.path.has_value());
+
+  auto path = result.path.value();
+  auto nodes = path.nodes;
+
+  ASSERT_EQ(nodes.size(), 1);
+  ASSERT_EQ(result.nodes_opened, 1);
+
+  ASSERT_FLOAT_EQ(path.length, 0.0f);
+
+  ASSERT_EQ(nodes[0], node1_ptr);
+}
+
 TEST(AStar, SimplePath) {
   {
     auto node1 = std::make_unique<TestNode>(std::make_pair(0.0f, 0.0f));

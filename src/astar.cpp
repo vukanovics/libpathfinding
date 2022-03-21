@@ -24,10 +24,6 @@ auto Pathfinder::FindPath_AStar(Node* from, Node* to) const noexcept -> Result {
 
   std::vector<Node*> open_nodes{};
 
-  if (from->GetConnections().size() == 0) {
-    return {};
-  }
-
   node_data.insert({from, NodeData{}});
   open_nodes.push_back(from);
 
