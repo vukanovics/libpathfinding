@@ -1,1 +1,1 @@
-**Multiple pathfinding algorithms implemented in C++**
+**AStar algorithm implemented in C++**
